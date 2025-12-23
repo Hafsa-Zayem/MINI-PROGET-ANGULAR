@@ -1,0 +1,105 @@
+<div class="details-container" *ngIf="product">
+
+    <div class="back-navigation">
+        <button class="btn-back" (click)="goBack()">
+             ← Back to Catalog
+        </button>
+    </div>
+    
+
+
+<div class="details-card" *ngIf="product">
+    <h2> Product Details</h2>
+
+    <div class="details-content">
+        <div class="details-image">
+            <img 
+             [src]="product.getImageUrl()" 
+             [alt]="product.getProductTitle()"
+             (error)="onImageError($event)"
+              class="detail-img">
+            
+        </div>
+
+        <div class="details-info">
+            <h3>{{ product.getProductTitle() }}</h3>
+
+            <div class="price-section">
+                <p class="orginal-price" *ngIf="hasDiscount()"> 
+                    <del>{{ product.getProductPrice().toLocaleString('en-Us', { minimumFractionDigits: 2}) }} DH</del>
+                </p>
+                <p class="current-price" >
+                    {{ getDiscountPrice().toLocaleString('en-Us', { minimumFractionDigits: 2}) }} DH 
+                </p>
+                <span class="discount-badge" *ngIf="hasDiscount()">
+                    -10% Discount!
+                </span>
+            </div>
+
+            <div class="stock-info">
+                <p><strong>Availability:</strong></p>
+                <p [ngClass]="{
+                    'in-stock': product.getQuantity() >=10,
+                    'low-stock': product.getQuantity() > 0 && product.getQuantity() <10,
+                    'out-of-stock': product.getQuantity() === 0
+                }">
+                <span *ngIf="product.getQuantity() > 0">
+                    ✓ {{ product.getQuantity() }} items in stock 
+                </span>
+                <span *ngIf="product.getQuantity() === 0">
+                  ✗ Out of stock   
+                </span>
+            </p>
+            </div>
+
+            <div class="additional-info">
+                <h4>Product Specifications:</h4>
+                <ul>
+                    <li><strong>Product ID:</strong> {{ product.getProductId() }}</li>
+                    <li><strong>Title:</strong> {{ product.getProductTitle() }}</li>
+                    <li><strong>Price:</strong>{{ product.getProductPrice().toLocaleString('en-Us', { minimumFractionDigits: 2}) }} DH</li>
+                    <li><strong>Quantity:</strong> {{ product.getQuantity() }}</li>
+                </ul>
+            </div>
+
+            <div class="quantity-selctor" *ngIf="product.getQuantity() >0">
+                <label><strong>Quantity:</strong></label>
+                <div class="quantity-controls">
+                    <button 
+                    class="qty-btn"
+                    (click)="decreaseQuantity()"
+                    [disabled]="productQuantity < 1">
+                        -
+                </button>
+                    <span class="qty-display">{{ productQuantity }}</span>
+                    <button
+                    class="qty-btn"
+                    (click)="increaseQuantity()"
+                    [disabled]="productQuantity >= product.getQuantity()">
+                      + 
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="actions">
+                <button class="btn-add-cart" [disabled]="product.getQuantity() === 0" (click)="addToCart()">
+                    <span *ngIf="product.getQuantity() > 0">Add to Cart</span>
+                    <span *ngIf="product.getQuantity() === 0">Out of Stock</span>
+                </button>
+
+                <a routerLink="/cart" class="btn-view-cart">
+                    view cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="not-found" *ngIf="!product">
+    <h2>Product Not Found</h2>
+    <p>The product you're looking for doesn't exist.</p>
+    <button class="btn-back" (click)="goBack()">← Back to Catalog</button>
+</div>

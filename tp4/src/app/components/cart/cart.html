@@ -1,0 +1,120 @@
+<div class="cart-container">
+
+    <div class="cart-header">
+    <h1>🛒 Shopping Cart</h1>
+    <a routerLink="/catalog" class="back-btn">← Back to Catalog</a>
+    </div>
+    <div class="empty-cart" *ngIf="isEmpty()">
+        <div class="empty-icon">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Add some products to get started!</p>
+        <a routerLink="/catalog" class="btn-shop">Start Shopping</a>
+    </div>
+
+    <div class="cart-content" *ngIf="!isEmpty()">
+        <div class="cart-items">
+            <div class="items-header">
+                <h2>items ({{ getItemCount() }} )</h2>
+                <button class="clear-cart-btn" (click)="clearCart()">
+                              🗑️ Clear Cart
+                </button>
+            </div>
+
+            <div 
+            *ngFor="let item of cartItems"
+            class="cart-item">
+            
+            <div class="item-image">
+                <img
+                [src]="item.itemProduct.getImageUrl()"
+                [alt]="item.itemProduct.getProductTitle()"
+                (error)="onImageError($event)">
+            </div>
+
+            <div class="item-info">
+                <h3>{{ item.itemProduct.getProductTitle() }}</h3>
+                <p class="item-category">{{ item.itemProduct.getCategory() }}</p>
+                <p class="item-price">{{ item.itemProduct.getProductPrice() | currency:'DH'}} each</p>
+            </div>
+
+            <div class="item-quantity">
+                <button
+                class="qty-btn"
+                (click)="decreaseQuantity(item)"
+                [disabled]="item.quantity < 1">
+                     -
+               </button>
+               <span class="qty-display">{{ item.quantity }}</span>
+               <button 
+               class="qty-btn" 
+               (click)="increaseQuantity(item)">
+                    +
+               </button>     
+            </div>
+
+            <div class="item-total">
+                <p class="total-label">Subtotal</p>
+                <p class="total-price">{{ item.itemProduct.getProductPrice() * item.quantity | currency:'DH' }}</p>
+            </div>
+
+            <button
+            class="remove-btn"
+            (click)="removeItem(item.itemProduct.getProductId())"
+            title="Remove item">
+             ✕
+            </button>
+        </div>
+        </div>
+
+        <div class="cart-summary">
+            <h2>Order Summary</h2>
+
+            <div class="summary-details">
+                <div class="summary-row">
+                    <span>Items ({{ getItemCount() }})</span>
+                    <span>{{ total | currency:'DH' }}</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>
+                        Shipping
+                    </span>
+                    <span class="free">
+                        FREE
+                    </span>
+                </div>
+
+                <div class="summary-row">
+                    <span>
+                        Tax (20%)
+                    </span>
+                    <span>
+                        {{ total * 0.20 | currency: 'DH'}}
+                    </span>
+                </div>
+                
+                <div class="summary-divider">
+
+                    <div class="summary-row total-row">
+                      <span>Total</span>
+                      <span class="total-amount">{{ total * 1.20 | currency: 'DH' }}</span>
+                    </div>
+                </div>
+
+                <button class="checkout-btn" (click)="checkout()">
+                    💳 Proceed to Checkout
+                </button>
+                <a routerLink="/catalog" class="continue-shopping">
+                            ← Continue Shopping
+                </a>
+
+                <div class="cart-items-display">
+                    <h3>Cart Items (displayItem method):</h3>
+                    <div class="item-display" *ngFor="let item of cartItems">
+                        {{ item.displayItem() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

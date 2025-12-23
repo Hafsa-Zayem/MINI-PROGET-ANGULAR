@@ -1,0 +1,50 @@
+<header class="app-header">
+
+<div class="header-content">
+  
+    <h1>🛒 E-Commerce site</h1>
+    <nav class="nav-menu">
+       <div class="category-filter" *ngIf="showCategoryFilter">
+     <a routerLink="/catalog" routerLinkActive="active" class="nav-link">
+        📦 Catalog</a>
+       
+  <button 
+  *ngFor="let category of categories"
+  class="category-btn"
+  [ngClass]="{'active': SelectedCategory === category}"
+  (click)="navigateToCategory(category)">
+     {{ category | titlecase }}
+   </button>
+  </div>
+     
+      <a routerLink="/cart" routerLinkActive="active" class="nav-link">
+       🛒 Cart 
+      
+      <span class="cart-badge" *ngIf="cartItemCount > 0">
+        {{ cartItemCount }}
+      </span>
+    </a>
+
+    <div class="user-menu">
+      <span class="user-welcome"> 👤 {{getUserFullName() }}
+       <span class="user-badge" [class.admin-badge]="isAdmin()">
+        {{ currentUser?.getuserType() }}
+       </span>  
+      </span>
+       <button class="btn-logout" (click)="logout()">
+        🚪 Logout
+       </button>
+    </div>
+    </nav>
+  </div>
+ 
+     
+  </header>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer"  *ngIf="isAuthenticated">
+    <p>&copy; 2025 E-commerce site - Angular TP4</p>
+  </footer>

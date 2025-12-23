@@ -1,0 +1,45 @@
+<div class="catalog-container">
+ <h1>Product Catalog</h1>
+
+ 
+
+    <div class="products-grid">
+
+     <ng-container *ngFor="let product of filteredProducts">
+     <div 
+     *ngIf="product.getQuantity() > 0"
+     class="product-card"
+     [ngClass]="{'low-stock': isLowStock(product)}">
+    
+       <div class="product-image">
+        <img
+        [src]="product.getImageUrl()"
+        [alt]="product.getProductTitle()"
+        (error)="onImageError($event)"
+        class="product-img">
+        
+       </div>
+
+       <div class="product-info">
+        <h3>{{ product.getProductTitle() }}</h3>
+        <p class="price">{{ product.getProductPrice() | currency: 'MAD'}} </p>
+        <p class="stock"> 
+            <span *ngIf="isLowStock(product)" class="warning">⚠️ Low Stock: </span>
+            {{ product.getQuantity()}} available
+        </p>
+       </div>
+
+       <button class="btn-details"
+       (click)="onViewDetails(product)">
+         BUY   
+       </button>
+    </div>
+  </ng-container>
+</div>
+
+<div class="no-products" *ngIf="filteredProducts.length === 0">
+  <div class="no-products-icon">📦</div>
+  <h3> No products found</h3>
+  <p>Try selecting a differnt category</p>
+</div>
+</div>
